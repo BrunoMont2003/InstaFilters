@@ -35,8 +35,8 @@ ayuda_mc = 0
 
 def video_stream():
     global video
-    # video = cv2.VideoCapture(0)
     video = cv2.VideoCapture(IP)
+    # video = cv2.VideoCapture(IP)
     iniciar(video)
 
 
@@ -114,12 +114,12 @@ def webcamToggle():
         bandera = True
 
 
-def tomarFoto():
+def tomarFoto(cap):
     global video, img_counter
     control = 0
 
     while True:
-        ret, frame = video.read()
+        ret, frame = cap.read()
         if not ret:
             print("failed to grab frame")
             break
@@ -377,6 +377,7 @@ def llamarMclovin():
 
 def mclovin(cap, image, faceClassif):
     global ayuda_mc
+    etiq_video.after(10, quitar)
     ret, frame = cap.read()
     frame = imutils.resize(frame, width=640)
     if ret and ayuda_mc == 1:
@@ -461,7 +462,7 @@ container.place(x=140, y=715)
 # boton capturar imagen
 icon = tk.PhotoImage(file="img/shot.png")
 shot_boton = tk.Button(container, image=icon, cursor="hand2",
-                       border=0, width=150, command=tomarFoto)
+                       border=0, width=150, command=lambda: tomarFoto(video))
 shot_boton.pack(side="left")
 
 
