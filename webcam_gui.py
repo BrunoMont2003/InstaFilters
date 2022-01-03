@@ -497,7 +497,7 @@ record_boton = tk.Button(panel_video, image=record_icon, cursor="hand2",
 
 stop_icon = tk.PhotoImage(file="img/stop.png")
 stop_boton = tk.Button(panel_video, image=stop_icon, cursor="hand2",
-                       border=0, command=lambda: recording()).grid(row=0, column=0, padx=12)
+                       border=0).grid(row=0, column=0, padx=12)
 
 
 # escoger modo
