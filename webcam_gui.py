@@ -31,6 +31,10 @@ ayuda_ny = 0
 ayuda_c = 0
 ayuda_nc = 0
 ayuda_mc = 0
+video_ny = None
+video_c = None
+video_nc = None
+video_mc = None
 
 
 def video_stream():
@@ -63,10 +67,15 @@ def quitar():
 
 
 def reset():
-    quitar()
-    video_stream()
-    # etiq_video.after(10, quitar)
-    # etiq_video.after(10, video_stream)
+    global video_ny, video_c, video_nc, video_mc
+    if video_ny is not None:
+        video_ny.release()
+    if video_c is not None:
+        video_c.release()
+    if video_nc is not None:
+        video_nc.release()
+    if video_mc is not None:
+        video_mc.release()
 
 
 def recording():
@@ -134,20 +143,23 @@ def tomarFoto(cap):
 
 
 def llamarNewYear():
-    global ayuda_ny
+    reset()
+    global ayuda_ny, video_ny
     ayuda_ny += 1
     if ayuda_ny == 1:
-        cap = cv2.VideoCapture(IP)
+        video_ny = cv2.VideoCapture(IP)
 
         image = cv2.imread('img/nuevo1.png', cv2.IMREAD_UNCHANGED)
 
         faceClassif = cv2.CascadeClassifier(
             cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-        newyear(cap, image, faceClassif)
+        newyear(video_ny, image, faceClassif)
     else:
+        reset()
         quitar()
         print("god")
         ayuda_ny = 0
+    # video = cap
 
 
 contador = 0
@@ -201,25 +213,27 @@ def newyear(cap, image, faceClassif):
         cap.release()
         etiq_video.after(10, video_stream)
         print("el ret murio")
+        reset()
 
 
 def llamarCachos():
-    global ayuda_c
+    reset()
+    global ayuda_c, video_c
     ayuda_c += 1
-    cap = None
     if ayuda_c == 1:
-        cap = cv2.VideoCapture(IP)
+        video_c = cv2.VideoCapture(IP)
         # Lectura de la imagen a incrustar en el video
         image = cv2.imread('img/cachos.png', cv2.IMREAD_UNCHANGED)
 
         # Detector de rostros
         faceClassif = cv2.CascadeClassifier(
             cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-        caracachos(cap, image, faceClassif)
+        caracachos(video_c, image, faceClassif)
     else:
         quitar()
         print("god")
         ayuda_c = 0
+        reset()
 
 
 def caracachos(cap, image, faceClassif):
@@ -227,8 +241,8 @@ def caracachos(cap, image, faceClassif):
     etiq_video.after(10, quitar)
 
     ret, frame = cap.read()
-    frame = imutils.resize(frame, width=640)
     if ret and ayuda_c == 1:
+        frame = imutils.resize(frame, width=640)
 
         faces = faceClassif.detectMultiScale(frame, 1.3, 5)
 
@@ -274,29 +288,32 @@ def caracachos(cap, image, faceClassif):
     else:
         cap.release()
         etiq_video.after(10, video_stream)
-        # print("el ret murio")
+        reset()
+        print("el ret murio")
 
 
 def llamarCerdo():
-    global ayuda_nc
+    reset()
+    global ayuda_nc, video_nc
     ayuda_nc += 1
-    cap = None
     if ayuda_nc == 1:
-        cap = cv2.VideoCapture(IP)
+        video_nc = cv2.VideoCapture(IP)
         nose_image = cv2.imread('img/pig_nose.png')
-        _, frame = cap.read()
-        rows, cols, _ = frame.shape
-        nose_mask = np.zeros((rows, cols), np.uint8)
+        ret, frame = video_nc.read()
+        if ret:
+            rows, cols, _ = frame.shape
+            nose_mask = np.zeros((rows, cols), np.uint8)
 
         # Detector facial de carga
         detector = dlib.get_frontal_face_detector()
         predictor = dlib.shape_predictor(
             'carga/shape_predictor_68_face_landmarks.dat')
-        cerdo(cap, nose_image, nose_mask, detector, predictor)
+        cerdo(video_nc, nose_image, nose_mask, detector, predictor)
     else:
         quitar()
         print('god')
         ayuda_nc = 0
+        reset()
 
 
 def cerdo(cap, nose_image, nose_mask, detector, predictor):
@@ -304,10 +321,9 @@ def cerdo(cap, nose_image, nose_mask, detector, predictor):
     etiq_video.after(10, quitar)
     ret, frame = cap.read()
     nose_mask.fill(0)
-    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     if ret and ayuda_nc == 1:
-
+        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = detector(frame)
         for face in faces:
             landmarks = predictor(gray_frame, face)
@@ -354,14 +370,17 @@ def cerdo(cap, nose_image, nose_mask, detector, predictor):
                          nose_mask, detector, predictor)
     else:
         cap.release()
+        print("el ret murio")
+        reset()
         etiq_video.after(10, video_stream)
 
 
 def llamarMclovin():
-    global ayuda_mc
+    reset()
+    global ayuda_mc, video_mc
     ayuda_mc += 1
     if ayuda_mc == 1:
-        cap = cv2.VideoCapture(IP)
+        video_mc = cv2.VideoCapture(IP)
 
         # Lectura de la imagen a incrustar en el video
         image = cv2.imread('img/mclovin.png', cv2.IMREAD_UNCHANGED)
@@ -369,18 +388,19 @@ def llamarMclovin():
         # Detector de rostros
         faceClassif = cv2.CascadeClassifier(
             cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-        mclovin(cap, image, faceClassif)
+        mclovin(video_mc, image, faceClassif)
     else:
         print("god")
         ayuda_mc = 0
+        reset()
 
 
 def mclovin(cap, image, faceClassif):
     global ayuda_mc
     etiq_video.after(10, quitar)
     ret, frame = cap.read()
-    frame = imutils.resize(frame, width=640)
     if ret and ayuda_mc == 1:
+        frame = imutils.resize(frame, width=640)
         faces = faceClassif.detectMultiScale(frame, 1.3, 5)
 
         for (x, y, w, h) in faces:
@@ -430,6 +450,7 @@ def mclovin(cap, image, faceClassif):
         cap.release()
         etiq_video.after(10, video_stream)
         print("el ret murio")
+        reset()
 
 
 def mostrarIconosFoto():
@@ -462,7 +483,7 @@ container.place(x=140, y=715)
 # boton capturar imagen
 icon = tk.PhotoImage(file="img/shot.png")
 shot_boton = tk.Button(container, image=icon, cursor="hand2",
-                       border=0, width=150, command=lambda: tomarFoto(video))
+                       border=0, width=150, command=tomarFoto)
 shot_boton.pack(side="left")
 
 
