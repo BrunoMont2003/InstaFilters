@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter.constants import DISABLED, N, NONE
 from PIL import Image, ImageTk
 import cv2
 import imutils
@@ -10,7 +9,7 @@ from math import hypot
 
 ventana = tk.Tk()
 
-ventana.geometry("428x926+200+10")
+ventana.geometry("428x926+2000+10")
 ventana.title("Filtros de Instagram")
 ventana.resizable(width=False, height=False)
 
@@ -40,7 +39,7 @@ video_mc = None
 def video_stream():
     global video
     video = cv2.VideoCapture(IP)
-    # video = cv2.VideoCapture(IP)
+    # video = cv2.VideoCapture(0)
     iniciar(video)
 
 
@@ -235,6 +234,7 @@ def newyear(cap, image, faceClassif, shot):
         etiq_video.image = imagen
         frame = imutils.resize(frame, width=640)
         if shot:
+            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
             img_name = "capturas/foto_filtro_ny_{}.png".format(img_counter)
             cv2.imwrite(img_name, frame)
             print("{} written!".format(img_name))
@@ -321,6 +321,7 @@ def caracachos(cap, image, faceClassif, shot):
         etiq_video.image = imagen
         frame = imutils.resize(frame, width=640)
         if shot:
+            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
             img_name = "capturas/foto_filtro_cuernos_{}.png".format(
                 img_counter)
             cv2.imwrite(img_name, frame)
@@ -421,6 +422,8 @@ def cerdo(cap, nose_image, nose_mask, detector, predictor, shot):
         etiq_video.image = imagen
         frame = imutils.resize(frame, width=640)
         if shot:
+            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+
             img_name = "capturas/foto_filtro_narizcerdo_{}.png".format(
                 img_counter)
             cv2.imwrite(img_name, frame)
@@ -510,6 +513,7 @@ def mclovin(cap, image, faceClassif, shot):
         etiq_video.image = imagen
         frame = imutils.resize(frame, width=640)
         if shot:
+            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
             img_name = "capturas/foto_filtro_mclovin_{}.png".format(
                 img_counter)
             cv2.imwrite(img_name, frame)
