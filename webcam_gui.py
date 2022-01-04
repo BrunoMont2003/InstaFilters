@@ -8,23 +8,17 @@ from math import hypot
 
 
 ventana = tk.Tk()
-
 ventana.geometry("428x926+2000+10")
 ventana.title("Filtros de Instagram")
 ventana.resizable(width=False, height=False)
 
 
-altura = 640
-anchura = 640
-# altura = 926
-# anchura = 428
-
 # GLOBALES
+altura = 640
+anchura = 428
 video = None
-capturar = None
 img_counter = 0
 salida = None
-grabar = False
 IP = "http://192.168.0.12:8080/video"
 ayuda_ny = 0
 ayuda_c = 0
@@ -44,7 +38,6 @@ def video_stream():
 
 
 def iniciar(captura):
-    global video
     ret, frame = captura.read()
     if ret == True:
         frame = imutils.resize(frame, height=altura)
@@ -61,7 +54,6 @@ def iniciar(captura):
 
 def quitar():
     global video
-    # etiq_video.pack_forget()
     video.release()
 
 
@@ -78,22 +70,15 @@ def reset():
 
 
 def recording():
-    # etiq_video.after(10, quitar)
     global video
     captura = video
-
     salida = cv2.VideoWriter(
-        'records/videoSalida.avi', cv2.VideoWriter_fourcc(*'XVID'), 20.0, (480, 640))
-
-    # captura = cv2.VideoCapture(IP)
-    print(captura.get(cv2.CAP_PROP_FRAME_WIDTH), "x",
-          captura.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        'records/videoSalida.avi', cv2.
+        VideoWriter_fourcc(*'XVID'), 20.0, (480, 640))
     grabarVideo(captura, salida, 0, 100)
 
 
 def grabarVideo(captura, salida, contador, duracion):
-    # etiq_video.after(10, quitar)
-    # global video, grabar
     ret, frame = captura.read()
     if ret and contador < duracion:
         salida.write(frame)
@@ -145,17 +130,13 @@ def llamarTomarFoto():
     global video, ayuda_ny, ayuda_c, ayuda_nc, ayuda_mc
     if ayuda_ny == 1:
         llamarNewYear(True)
-        print("ny")
         ayuda_ny = 0
     if ayuda_c == 1:
         llamarCachos(True)
-        print("cachos")
     if ayuda_nc == 1:
         llamarCerdo(True)
-        print("cerdo")
     if ayuda_mc == 1:
         llamarMclovin(True)
-        print("mclovin")
     else:
         tomarFoto(video)
 
@@ -546,29 +527,41 @@ bandera = True
 webcamToggle()
 # on off
 onoff_icon = tk.PhotoImage(file="img/onoff.png")
-
-onoff_boton = tk.Button(ventana, image=onoff_icon, cursor="hand2",
-                        border=0, command=webcamToggle)
+onoff_boton = tk.Button(ventana,
+                        image=onoff_icon,
+                        cursor="hand2",
+                        border=0,
+                        command=webcamToggle)
 onoff_boton.place(x=10, y=10)
 
 # panel container
-container = tk.LabelFrame(ventana, height=75, width=anchura, bd=0)
+container = tk.LabelFrame(ventana,
+                          height=75,
+                          width=anchura,
+                          bd=0)
 container.place(x=140, y=715)
 
 # boton capturar imagen
 icon = tk.PhotoImage(file="img/shot.png")
-shot_boton = tk.Button(container, image=icon, cursor="hand2",
-                       border=0, width=150, command=lambda: llamarTomarFoto())
+shot_boton = tk.Button(container,
+                       image=icon,
+                       cursor="hand2",
+                       border=0,
+                       width=150,
+                       command=llamarTomarFoto)
 shot_boton.pack(side="left")
 
 
 # botones capturar video
-panel_video = tk.LabelFrame(container, height=75, width=anchura, bd=0)
-
-
+panel_video = tk.LabelFrame(container, height=75,
+                            width=anchura, bd=0)
 record_icon = tk.PhotoImage(file="img/record.png")
-record_boton = tk.Button(panel_video, image=record_icon, cursor="hand2",
-                         border=0, command=lambda: recording()).grid(row=0, column=1, padx=12)
+record_boton = tk.Button(panel_video, image=record_icon,
+                         cursor="hand2",
+                         border=0,
+                         command=recording).grid(row=0,
+                                                 column=1,
+                                                 padx=12)
 
 stop_icon = tk.PhotoImage(file="img/stop.png")
 stop_boton = tk.Button(panel_video, image=stop_icon, cursor="hand2",
@@ -576,14 +569,21 @@ stop_boton = tk.Button(panel_video, image=stop_icon, cursor="hand2",
 
 
 # escoger modo
-panel_modo = tk.LabelFrame(ventana, height=50, width=anchura, bd=0)
+panel_modo = tk.LabelFrame(ventana, height=50,
+                           width=anchura, bd=0)
 panel_modo.place(x=123, y=800)
 imagen_icon = tk.PhotoImage(file="img/btnImagen.png")
 imagen_boton = tk.Button(panel_modo, image=imagen_icon,
-                         cursor="hand2", border=0, command=mostrarIconosFoto).grid(row=0, column=0, padx=10)
+                         cursor="hand2", border=0,
+                         command=mostrarIconosFoto).grid(row=0,
+                                                         column=0,
+                                                         padx=10)
 video_icon = tk.PhotoImage(file="img/btnVideo.png")
 video_boton = tk.Button(panel_modo, image=video_icon,
-                        cursor="hand2", border=0, command=mostrarIconosVideo).grid(row=0, column=1, padx=10)
+                        cursor="hand2", border=0,
+                        command=mostrarIconosVideo).grid(row=0,
+                                                         column=1,
+                                                         padx=10)
 
 
 #  panel de filtros
@@ -597,12 +597,24 @@ cerdo_i = tk.PhotoImage(file="img/cerdo.png")
 mclovin_item = tk.PhotoImage(file="img/mclovin_item.png")
 
 item1 = tk.Button(panel, image=gorro, cursor="hand2",
-                  border=0, command=lambda: llamarNewYear(False)).grid(row=0, column=0, padx=20)
+                  border=0,
+                  command=lambda: llamarNewYear(False)).grid(row=0,
+                                                             column=0,
+                                                             padx=20)
 item2 = tk.Button(panel, image=cuernos, cursor="hand2",
-                  border=0, command=lambda: llamarCachos(False)).grid(row=0, column=1, padx=20)
+                  border=0,
+                  command=lambda: llamarCachos(False)).grid(row=0,
+                                                            column=1,
+                                                            padx=20)
 item3 = tk.Button(panel, image=cerdo_i, cursor="hand2",
-                  border=0, command=lambda: llamarCerdo(False)).grid(row=0, column=2, padx=20)
+                  border=0,
+                  command=lambda: llamarCerdo(False)).grid(row=0,
+                                                           column=2,
+                                                           padx=20)
 item4 = tk.Button(panel, image=mclovin_item, cursor="hand2",
-                  border=0, command=lambda: llamarMclovin(False)).grid(row=0, column=3, padx=20)
+                  border=0,
+                  command=lambda: llamarMclovin(False)).grid(row=0,
+                                                             column=3,
+                                                             padx=20)
 
 ventana.mainloop()
